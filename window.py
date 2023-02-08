@@ -207,7 +207,7 @@ class main(qw.QWidget):
         """Create new item."""
         self.item_f.update({"unnamed": [0, 0]})
         with open("./items.json", "w") as file:
-            json.dump(self.item_f, file)
+            json.dump(self.item_f, file, indent=4)
         self.load_items()
         try: self.selectet_obj.setEnabled(True); self.selectet_obj = None
         except: pass
@@ -223,7 +223,7 @@ class main(qw.QWidget):
             try: items.pop(self.selectet_obj_text[0])
             except: pass
         with open("./items.json", "w") as file:
-            json.dump(items, file)
+            json.dump(items, file, indent=4)
         self.load_items()
 
     def save(self) -> None:
@@ -239,7 +239,7 @@ class main(qw.QWidget):
                         self.item_f.pop(key)
                         self.item_f.update({name: [float(self.selec_item_weight_edit.text()), float(self.selec_item_worth_edit.text())]})
                         with open("./items.json", "w") as file:
-                            json.dump(self.item_f, file)
+                            json.dump(self.item_f, file, indent=4)
                         break
 
                 self.load_items()
