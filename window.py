@@ -1,27 +1,26 @@
+"""
+> Containing PyQt5 window.
+"""
 import PyQt5.QtWidgets as qw
 import PyQt5.QtCore as qc
 import PyQt5.QtGui as qg
-
 import sys, json
 import datetime
-
-from algorithms import recursively_algorythm, greedy_algorythm, smart_greedy_algorithm, check_file
+from algorythms import recursively_algorythm, greedy_algorythm, smart_greedy_algorithm, check_file
 
 # create window
 class main(qw.QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.setFixedSize(1000, 600)
-        self.setWindowTitle("Rucksackproblem")
-        self.setWindowIcon(qg.QIcon("./icon.png"))
+        self.setWindowTitle("Knapsack problem - by Avo-Catto")
         self.draw()
-
         check_file()
 
-    def draw(self):
+    def draw(self) -> None:
 
-        # label Algorithmus:
-        self.lab_algorythm = qw.QLabel(self, text="Algorithmus:")
+        # label Algorythms:
+        self.lab_algorythm = qw.QLabel(self, text="Algorythms:")
         self.lab_algorythm.setStyleSheet("font-size: 20px")
         self.lab_algorythm.move(30, 30)
 
@@ -41,8 +40,8 @@ class main(qw.QWidget):
 
         self.scroll_items.setVerticalScrollBarPolicy(qc.Qt.ScrollBarAlwaysOn)
 
-        # label Gegenstände
-        self.lab_items = qw.QLabel(self, text=f"Gegenstände: {self.layout_list.count()}")
+        # label Items
+        self.lab_items = qw.QLabel(self, text=f"Items: {self.layout_list.count()}")
         self.lab_items.setStyleSheet("font-size: 20px")
         self.lab_items.move(30, 120)
 
@@ -52,49 +51,49 @@ class main(qw.QWidget):
         self.selec_item_lab.move(350, 160)
 
         self.selec_item_edit = qw.QLineEdit(self)
-        self.selec_item_edit.setPlaceholderText("Gegenstand...")
+        self.selec_item_edit.setPlaceholderText("Items...")
         self.selec_item_edit.setStyleSheet("font-size: 20px")
         self.selec_item_edit.setFixedSize(200, 40)
         self.selec_item_edit.move(350, 200)
 
         # weight
-        self.selec_item_weight_lab = qw.QLabel(self, text="Gewicht in kg:")
+        self.selec_item_weight_lab = qw.QLabel(self, text="Weight in kg:")
         self.selec_item_weight_lab.setStyleSheet("font-size: 20px")
         self.selec_item_weight_lab.move(350, 260)
 
         self.selec_item_weight_edit = qw.QLineEdit(self)
-        self.selec_item_weight_edit.setPlaceholderText("Gewicht...")
+        self.selec_item_weight_edit.setPlaceholderText("Weight...")
         self.selec_item_weight_edit.setStyleSheet("font-size: 20px")
         self.selec_item_weight_edit.setFixedSize(200, 40)
         self.selec_item_weight_edit.move(350, 300)
 
         # worth
-        self.selec_item_worth_lab = qw.QLabel(self, text="Wert in €:")
+        self.selec_item_worth_lab = qw.QLabel(self, text="Worth in €:")
         self.selec_item_worth_lab.setStyleSheet("font-size: 20px")
         self.selec_item_worth_lab.move(350, 360)
 
         self.selec_item_worth_edit = qw.QLineEdit(self)
-        self.selec_item_worth_edit.setPlaceholderText("Wert...")
+        self.selec_item_worth_edit.setPlaceholderText("Worth...")
         self.selec_item_worth_edit.setStyleSheet("font-size: 20px")
         self.selec_item_worth_edit.setFixedSize(200, 40)
         self.selec_item_worth_edit.move(350, 400)
 
         # button add
-        self.add_but = qw.QPushButton(self, text="Hinzufügen")
+        self.add_but = qw.QPushButton(self, text="Add")
         self.add_but.setStyleSheet("font-size: 20px")
         self.add_but.setFixedSize(160, 40)
         self.add_but.move(80, 520)
         self.add_but.clicked.connect(self.add)
 
         # button delete
-        self.delete_but = qw.QPushButton(self, text="Löschen")
+        self.delete_but = qw.QPushButton(self, text="Delete")
         self.delete_but.setStyleSheet("font-size: 20px")
         self.delete_but.setFixedSize(160, 40)
         self.delete_but.move(300, 520)
         self.delete_but.clicked.connect(self.delete)
 
         # button save
-        self.save_but = qw.QPushButton(self, text="Übernehmen")
+        self.save_but = qw.QPushButton(self, text="Save")
         self.save_but.setStyleSheet("font-size: 20px")
         self.save_but.setFixedSize(160, 40)
         self.save_but.move(520, 520)
@@ -107,14 +106,14 @@ class main(qw.QWidget):
         self.start_but.move(740, 520)
         self.start_but.clicked.connect(self.start)
 
-        # label benötigte Zeit
-        self.lab_time = qw.QLabel(self, text="Benötigte Zeit: 0 sek")
+        # label Time needed
+        self.lab_time = qw.QLabel(self, text="Time needed: 0 sek")
         self.lab_time.setStyleSheet("font-size: 20px")
         self.lab_time.setFixedWidth(300)
         self.lab_time.move(640, 30)
         
         # max weight label
-        self.lab_max_weight = qw.QLabel(self, text="Maximales Gewicht: ")
+        self.lab_max_weight = qw.QLabel(self, text="Maximal weigth: ")
         self.lab_max_weight.setStyleSheet("font-size: 20px")
         self.lab_max_weight.move(640, 75)
 
@@ -125,8 +124,8 @@ class main(qw.QWidget):
         self.max_weight_edit.setFixedSize(80, 35)
         self.max_weight_edit.move(825, 70)
 
-        # label Rucksack
-        self.lab_backpack = qw.QLabel(self, text="Rucksack: 0kg 0€")
+        # label Backpack
+        self.lab_backpack = qw.QLabel(self, text="Backpack: 0kg 0€")
         self.lab_backpack.setStyleSheet("font-size: 20px")
         self.lab_backpack.setFixedWidth(300)
         self.lab_backpack.move(640, 120)
@@ -136,11 +135,10 @@ class main(qw.QWidget):
         self.scroll_items_backpack.setFixedSize(300, 330)
         self.scroll_items_backpack.move(640, 160)
         self.scroll_items_backpack.setVerticalScrollBarPolicy(qc.Qt.ScrollBarAlwaysOn)
-       
-
 
     # gui functions
-    def get_items(self):
+    def get_items(self) -> list:
+        """Get items from file."""
         items = []
 
         with open("./items.json", "r") as file:
@@ -153,7 +151,8 @@ class main(qw.QWidget):
 
         return items
     
-    def load_items(self):
+    def load_items(self) -> None:
+        """Displays items on window."""
         self.layout_list = qw.QVBoxLayout()
         self.layout_list.setAlignment(qc.Qt.AlignTop)
         self.widget_scroll = qw.QWidget()
@@ -167,12 +166,12 @@ class main(qw.QWidget):
         self.widget_scroll.setLayout(self.layout_list)
         self.scroll_items.setWidget(self.widget_scroll)
         try:
-            self.lab_items.setText(f"Gegenstände: {self.layout_list.count()}")
+            self.lab_items.setText(f"Items: {self.layout_list.count()}")
         except:
             pass
-    
 
-    def load_backpack(self, items):
+    def load_backpack(self, items) -> None:
+        """Load returned items by the selected algorythm."""
         self.layout_list_backpack = qw.QVBoxLayout()
         self.layout_list_backpack.setAlignment(qc.Qt.AlignTop)
         self.widget_scroll_backpack = qw.QWidget()
@@ -184,9 +183,9 @@ class main(qw.QWidget):
             self.layout_list_backpack.addWidget(object)
         self.widget_scroll_backpack.setLayout(self.layout_list_backpack)
         self.scroll_items_backpack.setWidget(self.widget_scroll_backpack)
-    
 
-    def select(self):
+    def select(self) -> None:
+        """Used for selecting items and editing them."""
         try: self.selectet_obj.setEnabled(True)
         except: pass
 
@@ -197,15 +196,16 @@ class main(qw.QWidget):
         self.selec_item_worth_edit.setText(self.selectet_obj_text[2].removesuffix("€"))
         self.selectet_obj.setEnabled(False)
     
-    def clear(self):
+    def clear(self) -> None:
+        """Clear text fields."""
         self.selec_item_edit.setText("")
         self.selec_item_weight_edit.setText("")
         self.selec_item_worth_edit.setText("")
 
-
     # button functions
-    def add(self):
-        self.item_f.update({"unbenannt": [0, 0]})
+    def add(self) -> None:
+        """Create new item."""
+        self.item_f.update({"unnamed": [0, 0]})
         with open("./items.json", "w") as file:
             json.dump(self.item_f, file)
         self.load_items()
@@ -213,9 +213,8 @@ class main(qw.QWidget):
         except: pass
         self.clear()
 
-
-    def delete(self):
-        # delete item
+    def delete(self) -> None:
+        """Delete selected item."""
         try: self.layout_list.removeWidget(self.selectet_obj)
         except: pass
         self.selectet_obj = None
@@ -227,13 +226,14 @@ class main(qw.QWidget):
             json.dump(items, file)
         self.load_items()
 
-
-    def save(self):
+    def save(self) -> None:
+        """Save selected item."""
         try:
             if self.selec_item_edit.text():
                 self.item_f[self.selectet_obj.text().split()[0]]
                 name = self.selec_item_edit.text().replace(" ", "_")
                 self.selectet_obj.setText(f" {name}   {float(self.selec_item_weight_edit.text())}kg {float(self.selec_item_worth_edit.text())}€")
+
                 for key in self.item_f:
                     if key == self.selectet_obj_text[0]:
                         self.item_f.pop(key)
@@ -249,8 +249,8 @@ class main(qw.QWidget):
         except:
             pass
 
-
-    def start(self):
+    def start(self) -> None:
+        """Start calculation with selected algorythm."""
         try:
             algorithm = self.combo_algorythm.currentText().strip()
             weight_limit = float(self.max_weight_edit.text())
@@ -262,8 +262,8 @@ class main(qw.QWidget):
                 end_time = datetime.datetime.now()
                 result_time = int(datetime.timedelta.total_seconds(end_time - start_time))
 
-                self.lab_time.setText(f"Benötigte Zeit: {result_time} sek")
-                self.lab_backpack.setText(f"Rucksack: {round(data[0], 2)}kg {round(data[1], 2)}€")
+                self.lab_time.setText(f"Time needed: {result_time} sec")
+                self.lab_backpack.setText(f"Backpack: {round(data[0], 2)}kg {round(data[1], 2)}€")
                 self.load_backpack(data[2])
 
             elif algorithm == "greedy":
@@ -273,8 +273,8 @@ class main(qw.QWidget):
                 end_time = datetime.datetime.now()
                 result_time = int(datetime.timedelta.total_seconds(end_time - start_time))
 
-                self.lab_time.setText(f"Benötigte Zeit: {result_time} sek")
-                self.lab_backpack.setText(f"Rucksack: {round(data[2], 2)}kg {round(data[1], 2)}€")
+                self.lab_time.setText(f"Time needed: {result_time} sek")
+                self.lab_backpack.setText(f"Backpack: {round(data[2], 2)}kg {round(data[1], 2)}€")
                 self.load_backpack(data[0])
             
             elif algorithm == "smart greedy":
@@ -283,15 +283,15 @@ class main(qw.QWidget):
                 end_time = datetime.datetime.now()
                 result_time = int(datetime.timedelta.total_seconds(end_time - start_time))
 
-                self.lab_time.setText(f"Benötigte Zeit: {result_time} sek")
-                self.lab_backpack.setText(f"Rucksack: {round(data[2], 2)}kg {round(data[1], 2)}€")
+                self.lab_time.setText(f"Time needed: {result_time} sek")
+                self.lab_backpack.setText(f"Backpack: {round(data[2], 2)}kg {round(data[1], 2)}€")
                 self.load_backpack(data[0])
         except:
             pass
 
-
 # show window
-def show_gui():
+def show_gui() -> None:
+    """Starting app."""
     app = qw.QApplication(sys.argv)
     window = main()
     window.show()
