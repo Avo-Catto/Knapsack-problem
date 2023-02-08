@@ -1,5 +1,7 @@
 """
-> Containing PyQt5 window.
+Author: Avo-Catto
+Page: window.py
+Note: containing window with main processes
 """
 import PyQt5.QtWidgets as qw
 import PyQt5.QtCore as qc

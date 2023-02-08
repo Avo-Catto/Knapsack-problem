@@ -1,5 +1,7 @@
 """
-> Used to create random items.
+Author: Avo-Catto
+Page: item_creator.py
+Note: creates random items to use
 """
 
 import json, random

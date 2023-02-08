@@ -1,5 +1,7 @@
 """
-> Contains algorythms.
+Author: Avo-Catto
+Page: algorythms.py
+Note: containing the algorythms
 """
 
 from itertools import combinations

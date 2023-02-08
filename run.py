@@ -1,5 +1,7 @@
 """
-> Used to run program.
+Author: Avo-Catto
+Page: run.py
+Note: just running the program
 """
 
 from window import show_gui
