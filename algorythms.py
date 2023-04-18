@@ -3,17 +3,15 @@ Author: Avo-Catto
 Page: algorythms.py
 Note: containing the algorythms
 """
-
 from itertools import combinations
 import json, os
 
 # functions
-def get_weight_worth(item:list) -> tuple:
-    """Returning weight and worth of parsed item list."""
+def get_weight_worth(item):
     item_list =  json.load(open("./items.json", "r")) # "Key":[weight, worth]
     weight = 0.0
     worth = 0.0
-
+    
     try:
         _ = item_list["zero"]
     except:
@@ -26,43 +24,46 @@ def get_weight_worth(item:list) -> tuple:
     return weight, worth
 
 # algorythms
-def recursively_algorythm(weight_limit:float) -> tuple:
-    """Calculating weight and worth for every combination."""
+def recursion(items:tuple, max_weight:float, best_comb:list=[0.0, 0.0, None], count:int=1) -> tuple:
+    overflow = True
+    combs = tuple(combinations(items, count))
+
+    for item in combs:
+        foo = get_weight_worth(item)
+
+        if all((
+                foo[0] <= best_comb[0], # best_comb = [weight, worth, items]
+                foo[1] > best_comb[1]
+            )) or all((
+                foo[1] > best_comb[1], 
+                foo[0] <= max_weight
+            )):
+
+            best_comb[0] = foo[0]
+            best_comb[1] = foo[1]
+            best_comb[2] = item
+        
+        if foo[0] < max_weight:
+            overflow = False
+    
+    if not overflow:
+        return recursion(items=items, max_weight=max_weight, best_comb=best_comb, count=count + 1)
+    else:
+        return best_comb
+
+
+def recursively_algorythm(weight_limit):
     item_list =  json.load(open("./items.json", "r")) # "Key":[weight, worth]
 
-    try:
-        _ = item_list["zero"]
-    except:
-        item_list.update({"zero":[0.0, 0.0]})
+    try: del item_list['zero']
+    except: ...
 
-    backpack = [0.0, 0.0, None]
-    weight = 0.0
-    worth = 0.0
-    amount = 0
-    overflow = False
-    selection = []
-    
-    while not overflow:
-        overflow = True
+    backpack = recursion(items=item_list, max_weight=weight_limit)
 
-        amount += 1
-        combis = combinations(item_list, amount)
-
-        for item in combis:
-            weight, worth = get_weight_worth(item)
-            selection.append([weight, worth, item])
-
-            if weight <= weight_limit:
-                overflow = False
-
-    for items in selection:
-        if items[0] <= weight_limit and items[1] > backpack[1]:
-            backpack = items
-        
     return backpack
 
-def greedy_algorythm(weight_limit:float) -> tuple:
-    """Searching for item with highest worth."""
+
+def greedy_algorythm(weight_limit):
     item_list =  json.load(open("./items.json", "r")) # "Key":[weight, worth]
 
     try:
@@ -79,12 +80,7 @@ def greedy_algorythm(weight_limit:float) -> tuple:
         best_item = "zero"
 
         for item in item_list:
-            if all((
-                    item_list[item][1] > item_list[best_item][1], 
-                    item_list[item][0] <= (weight_limit - weight), 
-                    item not in backpack
-            )):
-
+            if item_list[item][1] > item_list[best_item][1] and item_list[item][0] <= (weight_limit - weight) and item not in backpack:
                 best_item = item
 
         if best_item == "zero":
@@ -98,8 +94,7 @@ def greedy_algorythm(weight_limit:float) -> tuple:
     return (backpack, worth, weight)
 
 
-def smart_greedy_algorithm(weight_limit:float) -> tuple:
-    """Calculating distance between weight and worth of items."""
+def smart_greedy_algorithm(weight_limit):
     item_list =  json.load(open("./items.json", "r")) # "Key":[weight, worth]
 
     try:
@@ -117,30 +112,17 @@ def smart_greedy_algorithm(weight_limit:float) -> tuple:
         overflow = True
 
         for item in item_list:
-            if all((
-                    item_list[item][0] < item_list[item][1],
-                    (item_list[item][1] - item_list[item][0]) > best_item[1], 
-                    item_list[item][0] <= (weight_limit - weight), 
-                    item not in backpack
-            )):
-                
+            if item_list[item][0] < item_list[item][1] and (item_list[item][1] - item_list[item][0]) > best_item[1] and item_list[item][0] <= (weight_limit - weight) and item not in backpack:
                 best_item = [item, item_list[item][1] - item_list[item][0], True]
                 overflow = False
             
-            elif all((
-                    item_list[item][0] > item_list[item][1], 
-                    not best_item[2], 
-                    (item_list[item][0] - item_list[item][1]) < best_item[1], 
-                    item_list[item][0] <= (weight_limit - weight), 
-                    item not in backpack
-            )):
-
+            elif item_list[item][0] > item_list[item][1] and not best_item[2] and (item_list[item][0] - item_list[item][1]) < best_item[1] and item_list[item][0] <= (weight_limit - weight) and item not in backpack:
                 best_item = [item, item_list[item][1] - item_list[item][0], False]
                 overflow = False
             
             else:
                 pass
-        
+
         if not overflow:
             weight += item_list[best_item[0]][0]
             worth += item_list[best_item[0]][1]
@@ -150,8 +132,7 @@ def smart_greedy_algorithm(weight_limit:float) -> tuple:
 
 
 # file check
-def check_file() -> None:
-    """Creates file if not exist."""
+def check_file():
     if not os.path.exists("./items.json"):
         with open("./items.json", "w+") as file:
             file.write('{"zero":[0.0, 0.0]}')
