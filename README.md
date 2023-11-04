@@ -2,7 +2,7 @@
 *by Avo-Catto*
 
 ## About
-This desktop application uses PyQt5 and I wrote it for my skilled work at school where I treated the knapsack problem.
+This desktop application uses PyQt5 and I wrote it for my scientific essay in school where I treated the knapsack problem.
 
 ## What's the kanpsack problem?
 The knapsack problem is an optimization problem of combinatiorics and belongs to the np-complete problems.
